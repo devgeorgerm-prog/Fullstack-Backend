@@ -1,0 +1,14 @@
+### GET request to example server
+DELETE http://localhost:3001/api/persons/3
+###
+
+GET http://localhost:3001/api/persons
+###
+
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+  "name": "7",
+  "number": "23423"
+}
