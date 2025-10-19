@@ -1,8 +1,11 @@
 const express = require('express')
-var morgan = require('morgan')
+let morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
+app.use(cors())
+
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time[4] ms :body'))
 
@@ -28,6 +31,29 @@ let persons = [
         "number": "39-23-6423122"
     }
 ]
+
+let notes = [
+    {
+        id: "1",
+        content: "HTML is easy",
+        important: true
+    },
+    {
+        id: "2",
+        content: "Browser can execute only JavaScript",
+        important: false
+    },
+    {
+        id: "3",
+        content: "GET and POST are the most important methods of HTTP protocol",
+        important: true
+    }
+]
+
+
+app.get('/api/notes', (req, res) => {
+    res.json(notes)
+})
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
