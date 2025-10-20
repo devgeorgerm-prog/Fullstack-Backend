@@ -10,26 +10,32 @@ app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time[4] ms :body'))
 
-let persons = [
+let phonebook = [
     {
         "id": "1",
         "name": "Arto Hellas",
-        "number": "040-123456"
+        "number": "040-123456",
+        "important": true
     },
     {
         "id": "2",
         "name": "Ada Lovelace",
-        "number": "39-44-5323523"
+        "number": "39-44-5323523",
+        "important": true
+
     },
     {
         "id": "3",
         "name": "Dan Abramov",
-        "number": "12-43-234345"
+        "number": "12-43-234345",
+        "important": false
     },
     {
         "id": "4",
         "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
+        "number": "39-23-6423122",
+        "important": false
+
     }
 ]
 
@@ -56,8 +62,8 @@ app.get('/api/notes', (req, res) => {
     res.json(notes)
 })
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons)
+app.get('/api/phonebook', (req, res) => {
+    res.json(phonebook)
 })
 
 app.get('/info', (req, res) => {
