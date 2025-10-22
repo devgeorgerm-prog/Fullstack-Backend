@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-if (process.env.length < 3) {
+if (process.argv.length < 3) {
     console.log('Give password as argument')
     process.exit(1)
 }
@@ -10,25 +10,35 @@ mongoose.set('strictQuery', false)
 
 mongoose.connect(url)
 
-const noteSchema = new mongoose.Schema({
-    content: String,
-    important: Boolean
+const phonebookSchema = new mongoose.Schema({
+    name: String,
+    number: String
 })
 
-const Note = mongoose.model('Note', noteSchema)
 
-const note = new Note({
-    content: 'HTML is easy',
-    important: true
-})
+const Phonebooks = mongoose.model('phonebook', phonebookSchema)
 
-// Note.find({}).then(result => {
-//     result.forEach(note => {
-//         console.log(note)
-//     })
-//     mongoose.connection.close()
-// })
-note.save().then(result => {
-    console.log('note saved')
+if (process.argv.length > 5) {
+    console.log('Invalid')
     mongoose.connection.close()
-})
+} else if (process.argv.length < 4) {
+    Phonebooks.find({}).then(result => {
+        result.forEach(note => {
+            console.log(note)
+        })
+        mongoose.connection.close()
+    })
+} else {
+    const newName = process.argv[3]
+    const newNumber = process.argv[4]
+
+    const phonebook = new Phonebooks({
+        name: newName,
+        number: newNumber
+    })
+
+    phonebook.save().then(result => {
+        console.log(`added ${newName} ${newNumber} to phonebook`)
+        mongoose.connection.close()
+    })
+}
