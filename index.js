@@ -77,11 +77,10 @@ app.get('/info', (req, res) => {
     `)
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = req.params.id
-    const person = persons.find(person => person.id === id)
-    if (person) return res.json(person)
-    else res.status(404).end()
+app.get('/api/notes/:id', (req, res) => {
+    Note.findById(req.params.id).then(note => {
+        res.json(note)
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -94,31 +93,20 @@ app.delete('/api/persons/:id', (req, res) => {
 const generateId = () => {
     return String(Math.floor(Math.random() * 100))
 }
-app.post('/api/persons', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const body = req.body
-    const findDuplicate = persons.find(person => person.name === body.name)
-    if (!body.name || body.name === "") {
-        return res.status(400).json({
-            error: 'No name'
-        })
-    } else if (!body.number) {
-        return res.status(400).json({
-            error: 'No Number'
-        })
-    } else if (findDuplicate) {
-        return res.status(400).json({
-            error: 'Name must be unique'
-        })
+    if (!body.content){
+        return res.status(400).json({error: 'content missing'})
     }
 
-    const person = {
-        id: generateId(),
-        name: body.name,
-        number: body.number
-    }
+    const note = new Note({
+        content: body.content,
+        important: body.important || false
+    })
 
-    persons = persons.concat(person)
-    res.json(person)
+    note.save().then(savedNote => {
+        res.json(savedNote)
+    })
 })
 
 const PORT = process.env.PORT
