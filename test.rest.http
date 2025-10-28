@@ -2,13 +2,5 @@
 DELETE http://localhost:3001/api/persons/3
 ###
 
-GET http://localhost:3001/api/persons
+GET http://localhost:3001/api/phonebook
 ###
-
-POST http://localhost:3001/api/persons HTTP/1.1
-content-type: application/json
-
-{
-  "name": "7",
-  "number": "23423"
-}

@@ -2,10 +2,10 @@ require('dotenv').config()
 const express = require('express')
 let morgan = require('morgan')
 const app = express()
-
-const Note = require('./models/note')
+const cors = require('cors')
+const Phonebook = require('./mongo')
 app.use(express.json())
-
+app.use(cors())
 app.use(express.static('dist'))
 
 morgan.token('body', (req) => JSON.stringify(req.body));
@@ -58,15 +58,10 @@ let notes = [
     }
 ]
 
-
-app.get('/api/notes', (req, res) => {
-    Note.find({}).then(notes => {
-        res.json(notes)
-    })
-})
-
 app.get('/api/phonebook', (req, res) => {
-    res.json(phonebook)
+    Phonebook.find({}).then(phonebook => {
+        res.json(phonebook)
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -93,18 +88,18 @@ app.delete('/api/persons/:id', (req, res) => {
 const generateId = () => {
     return String(Math.floor(Math.random() * 100))
 }
-app.post('/api/notes', (req, res) => {
+app.post('/api/phonebook', (req, res) => {
     const body = req.body
-    if (!body.content){
+    if (!body){
         return res.status(400).json({error: 'content missing'})
     }
 
-    const note = new Note({
-        content: body.content,
-        important: body.important || false
+    const phonebook = new Phonebook({
+        name: body.name,
+        number: body.number
     })
 
-    note.save().then(savedNote => {
+    phonebook.save().then(savedNote => {
         res.json(savedNote)
     })
 })
